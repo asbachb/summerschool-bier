@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <f:view transient="true">
+        <f:loadBundle basename="com.exxeta.summerschool.bier.bloodalceholconcentration.GenderBundle" var="gender"/>
+        <h:head>
+            <title>BIER - Blutalkohol Innovativ Extravagant Rechner</title>
+            <link rel="stylesheet" href="libs/bootstrap/bootstrap.min.css" />
+            <style type="text/css">
+                .container {
+                    margin-top: 30px;
+                    max-width: 500px;
+                }
+            </style>
+        </h:head>
+        <h:body>
+            <h:panelGroup id="container" class="container" layout="block">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Berechnung des Blutalkohols</div>
+                    <div class="panel-body">
+                        <h:form>
+                            <div class="form-group">
+                                <h:outputLabel for="amountOfAlcoholInGram">Masseanteil des Alkohols in Gramm (g)</h:outputLabel>
+                                <h:inputText class="form-control" id="amountOfAlcoholInGram" value="#{bloodAlcoholConcentrationCalculation.amountOfAlcoholInGram}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="personWeight">Masse der Person in Kilogramm</h:outputLabel>
+                                <h:inputText class="form-control" id="personWeight" value="#{bloodAlcoholConcentrationCalculation.personWeight}"/>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="gender">Geschlecht</h:outputLabel>
+                                <h:selectOneMenu class="form-control" value="#{bloodAlcoholConcentrationCalculation.gender}">
+                                    <f:selectItems value="#{bloodAlcoholConcentrationCalculation.availableGenders()}" var="genderItem" itemLabel="#{gender['gender.' += genderItem]}" />
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="form-group">
+                                <h:commandButton class="form-control" value="Blutalkohol (BAK) berechnen" action="#{bloodAlcoholConcentrationCalculation.calculateBloodAlcoholConcentration()}">
+                                    <f:ajax render=":container" execute="@form" />
+                                </h:commandButton>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+
+                <h:panelGroup layout="block" class="alert alert-success" id="bloodAlcoholConcentration" rendered="#{bloodAlcoholConcentrationCalculation.bloodAlcoholConcentration ne null}">
+                    <b>Blutalkohol</b> 
+                    <h:outputText id="bloodAlcoholConcentrationValue" value=" #{bloodAlcoholConcentrationCalculation.bloodAlcoholConcentration} %" />
+                </h:panelGroup>
+                <h:panelGroup class="alert alert-danger" layout="block" rendered="#{facesContext.messageList.size() ne 0}">
+                    <b>Fehler!</b>
+                    <h:messages />
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:body>
+    </f:view>
+</html>
